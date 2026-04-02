@@ -6,6 +6,7 @@ class Tenant < ApplicationRecord
   has_many :users, dependent: :destroy
 
   validates :name, presence: true
+  validates :invitation_token, uniqueness: true, allow_nil: true
 
   before_create :generate_invitation_token
 

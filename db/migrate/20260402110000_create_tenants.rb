@@ -8,5 +8,7 @@ class CreateTenants < ActiveRecord::Migration[8.1]
 
       t.timestamps
     end
+
+    add_index :tenants, :invitation_token, unique: true
   end
 end
