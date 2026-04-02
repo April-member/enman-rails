@@ -5,7 +5,14 @@
 # 生成元: api/resolved/openapi/openapi.yaml
 # ==============================================================================
 
-resources :up, only: [ :index ]
-namespace :auth do
-  resources :signup, only: [ :create ]
+module Generated
+  module Signups
+    module Auth
+      class CreateBaseSerializer
+        include Alba::Resource
+
+        attributes :user, :tenant
+      end
+    end
+  end
 end

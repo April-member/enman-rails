@@ -2,7 +2,7 @@ gen:
 	bash script/openapi-generator-cli.sh
 
 code-gen:
-	bundle exec rake openapi:generate_code
+	docker compose run --rm app bundle exec rake openapi:generate_code
 
 gen-all: gen code-gen
 
@@ -12,3 +12,11 @@ setup-docker: gen
 
 setup: setup-docker
 	@echo "Setup complete (docker)"
+
+db-create:
+	docker compose run --rm app bin/rails db:create
+
+db-migrate:
+	docker compose run --rm app bin/rails db:migrate
+
+db-setup: db-create db-migrate

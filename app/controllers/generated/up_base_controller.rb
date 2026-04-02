@@ -18,19 +18,5 @@ module Generated
       render json: ::Ups::IndexSerializer.new(resource).serialize, status: :ok
     end
 
-    # POST /up (operationId: upPost)
-
-    def create
-      resource = Data.define(:tester).new(tester: "I'm up!")
-      render json: ::Ups::CreateSerializer.new(resource).serialize, status: :created
-    end
-
-    private
-
-    # Strong Parameters
-    def up_params
-      params.require(:up).permit(:test)
-    end
-
   end
 end
