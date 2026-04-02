@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+class CreateTenants < ActiveRecord::Migration[8.1]
+  def change
+    create_table :tenants do |t|
+      t.string :name, null: false
+      t.string :invitation_token
+
+      t.timestamps
+    end
+  end
+end

@@ -50,4 +50,10 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # ActiveRecord::Encryption keys for test environment.
+  # These are fixed dummy values used only in tests; never use in production.
+  config.active_record.encryption.primary_key = "test-primary-key-1234567890abcd"
+  config.active_record.encryption.deterministic_key = "test-deterministic-key-1234567"
+  config.active_record.encryption.key_derivation_salt = "test-key-derivation-salt-12345"
 end
