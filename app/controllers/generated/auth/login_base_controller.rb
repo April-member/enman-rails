@@ -22,7 +22,7 @@ module Generated
 
     # Strong Parameters
     def login_params
-      params.require(:login).permit(:email, :password)
+      params.permit(:email, :password)
     end
 
   end

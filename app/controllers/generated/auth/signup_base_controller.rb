@@ -22,7 +22,7 @@ module Generated
 
     # Strong Parameters
     def signup_params
-      params.require(:signup).permit(:tenant_name, :user_name, :email, :password, :password_confirmation)
+      params.permit(:tenant_name, :user_name, :email, :password, :password_confirmation)
     end
 
   end
