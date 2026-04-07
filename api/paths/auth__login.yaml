@@ -1,0 +1,88 @@
+post:
+  tags: ["auth"]
+  operationId: authLogin
+  summary: "ログイン"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/AuthLoginRequest"
+  responses:
+    "200":
+      description: ログイン成功
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AuthLoginResponse"
+    default:
+      description: Error Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    AuthLoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: "ログインメールアドレス"
+          example: "taro@example.com"
+        password:
+          type: string
+          description: "ログインパスワード"
+          minLength: 8
+          example: "Password123"
+
+    AuthLoginResponse:
+      type: object
+      required:
+        - user
+        - token
+      properties:
+        user:
+          $ref: "#/components/schemas/UserData"
+        token:
+          type: string
+          description: "JWT アクセストークン"
+          example: "eyJhbGciOiJIUzI1NiJ9..."
+
+    UserData:
+      type: object
+      required:
+        - id
+        - name
+        - email
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          example: "太郎"
+        email:
+          type: string
+          format: email
+          example: "taro@example.com"
+
+    ErrorResponse:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            base: ["メールアドレスまたはパスワードが正しくありません"]
