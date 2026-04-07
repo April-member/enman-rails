@@ -21,8 +21,8 @@ db-migrate:
 
 db-setup: db-create db-migrate
 
-credentials:
+credentials-show:
 	EDITOR="cat" bin/rails credentials:show
 
 credentials-edit:
-	bin/rails credentials:edit
+	EDITOR="vim" bin/rails credentials:edit
