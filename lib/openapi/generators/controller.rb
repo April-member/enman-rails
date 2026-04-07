@@ -38,7 +38,7 @@ module Openapi
           model_name:         model_name,
           actions:            resource.actions,
           permit_params:      resource.permit_params,
-          strong_params_code: build_strong_params_code(model_name, resource.permit_params)
+          strong_params_code: build_strong_params_code(model_name, resource.permit_params, resource.params_wrapper_key)
         )
 
         File.write(file_path, content)
@@ -74,20 +74,32 @@ module Openapi
         puts "[新規作成] #{pretty_path(file_path)}"
       end
 
-      # permit_params の配列から `params.require(...).permit(...)` のコード文字列を生成する
+      # permit_params の配列から strong parameters のコード文字列を生成する
       #
-      # 例:
-      #   build_strong_params_code("user", ["name", "email", { "address" => ["city", "zip"] }])
-      #   # => 'params.require(:user).permit(:name, :email, address: [:city, :zip])'
+      # wrapper_key が指定されている場合:
+      #   params.require(:wrapper_key).permit(...)
+      # wrapper_key が nil の場合（フラット構造）:
+      #   params.permit(...)
+      #
+      # 例（フラット）:
+      #   build_strong_params_code("signup", ["email", "password"], nil)
+      #   # => 'params.permit(:email, :password)'
+      #
+      # 例（ラッパーあり）:
+      #   build_strong_params_code("user", ["name", "email"], "user")
+      #   # => 'params.require(:user).permit(:name, :email)'
       #
       # @param model_name [String]
       # @param permit_params [Array<String, Hash>]
+      # @param wrapper_key [String, nil]
       # @return [String]
-      def build_strong_params_code(model_name, permit_params)
+      def build_strong_params_code(model_name, permit_params, wrapper_key = nil)
         if permit_params.empty?
-          "params.require(:#{model_name})"
+          wrapper_key ? "params.require(:#{wrapper_key})" : "params"
+        elsif wrapper_key
+          "params.require(:#{wrapper_key}).permit(#{build_permit_list(permit_params)})"
         else
-          "params.require(:#{model_name}).permit(#{build_permit_list(permit_params)})"
+          "params.permit(#{build_permit_list(permit_params)})"
         end
       end
 

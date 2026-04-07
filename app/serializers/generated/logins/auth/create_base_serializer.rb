@@ -6,10 +6,23 @@
 # ==============================================================================
 
 module Generated
-  module Ups
-    class IndexBaseSerializer
-      include Alba::Resource
-      attributes :message, :test
+  module Logins
+    module Auth
+      class CreateBaseSerializer
+        include Alba::Resource
+        attributes :token
+        attribute :user do |r|
+          {
+            name: r.user.name,
+            email: r.user.email
+          }
+        end
+        attribute :tenant do |r|
+          {
+            name: r.tenant.name
+          }
+        end
+      end
     end
   end
 end

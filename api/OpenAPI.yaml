@@ -8,6 +8,12 @@ servers:
 tags:
   - name: health
     description: Endpoints related to health checks and status monitoring
+  - name: auth
+    description: Endpoints related to authentication (signup, login, etc.)
 paths:
   /up:
     $ref: ./paths/up.yaml
+  /auth/signup:
+    $ref: ./paths/auth__signup.yaml
+  /auth/login:
+    $ref: ./paths/auth__login.yaml

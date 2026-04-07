@@ -6,16 +6,23 @@
 # ==============================================================================
 
 module Generated
-  class UpBaseController < ApplicationController
+  class Auth::LoginBaseController < ApplicationController
     # --------------------------------------------------------------------------
     # Actions
     # --------------------------------------------------------------------------
 
-    # GET /up (operationId: up)
+    # POST /auth/login (operationId: authLogin)
 
-    def index
-      resource = Data.define(:message, :test).new(message: "I'm up!", test: 123)
-      render json: ::Ups::IndexSerializer.new(resource).serialize, status: :ok
+    def create
+      resource = Data.define(:user, :tenant, :token).new(user: {"name" => "太郎", "email" => "taro@example.com"}, tenant: {"name" => "田中家"}, token: "eyJhbGciOiJIUzI1NiJ9...")
+      render json: ::Logins::CreateSerializer.new(resource).serialize, status: :ok
+    end
+
+    private
+
+    # Strong Parameters
+    def login_params
+      params.permit(:email, :password)
     end
 
   end

@@ -40,7 +40,7 @@ module Openapi
 
         attributes = action.responses
                            .select { |r| r[:status].to_s.start_with?("2") }
-                           .flat_map { |r| flatten_field_names(r[:fields]) }
+                           .flat_map { |r| r[:fields] }
                            .uniq
 
         content = render_template(

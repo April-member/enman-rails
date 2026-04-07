@@ -6,7 +6,8 @@ module Openapi
     # @!attribute namespace [Array<String>] 名前空間セグメント（例: ["admin"] → Admin::）
     # @!attribute actions [Array<ActionInfo>] そのリソースに紐づくアクション一覧
     # @!attribute permit_params [Array<String>] Strong Parameters用のフィールド名一覧
-    ResourceInfo = Data.define(:resource_name, :namespace, :actions, :permit_params)
+    # @!attribute params_wrapper_key [String, nil] requestBodyのラッパーキー（フラットな場合は nil）
+    ResourceInfo = Data.define(:resource_name, :namespace, :actions, :permit_params, :params_wrapper_key)
 
     # 1つのアクションに対するパース結果を保持するデータ構造
     #
@@ -77,16 +78,19 @@ module Openapi
           if %w[create update].include?(action)
             params = extract_permit_params(operation_def)
             acc[group_key][:permit_params] |= params
+            # ラッパーキーは最初に見つかった create/update アクションのものを採用
+            acc[group_key][:params_wrapper_key] ||= extract_wrapper_key(operation_def)
           end
         end
       end
 
       grouped.map do |_group_key, data|
         ResourceInfo.new(
-          resource_name: data[:resource_name],
-          namespace:     data[:namespace],
-          actions:       data[:actions].uniq { |a| a.name },
-          permit_params: data[:permit_params]
+          resource_name:      data[:resource_name],
+          namespace:          data[:namespace],
+          actions:            data[:actions].uniq { |a| a.name },
+          permit_params:      data[:permit_params],
+          params_wrapper_key: data[:params_wrapper_key]
         )
       end
     end
@@ -215,7 +219,12 @@ module Openapi
       if request_body
         schema = request_body.dig("content", "application/json", "schema") ||
                  request_body.dig("content", "multipart/form-data", "schema")
-        params.concat(extract_schema_params(schema)) if schema
+        if schema
+          wrapper_key = extract_wrapper_key(operation_def)
+          inner_schema = wrapper_key ? schema.dig("properties", wrapper_key) : schema
+          inner_schema = resolve_ref(inner_schema["$ref"]) || inner_schema if inner_schema&.dig("$ref")
+          params.concat(extract_schema_params(inner_schema)) if inner_schema
+        end
       end
 
       (operation_def["parameters"] || []).each do |param|
@@ -225,6 +234,43 @@ module Openapi
       end
 
       params.uniq
+    end
+
+    # requestBody のトップレベルスキーマを解析してラッパーキーを返す
+    #
+    # スキーマのトップレベル properties がちょうど1つのオブジェクト型キーのみで構成されている場合、
+    # そのキーをラッパーキーとして返す。それ以外はフラット構造とみなし nil を返す。
+    #
+    # 例（ラッパーあり）:
+    #   properties:
+    #     user:
+    #       type: object
+    #       properties: { name: ..., email: ... }
+    #   => "user"
+    #
+    # 例（フラット）:
+    #   properties:
+    #     name: { type: string }
+    #     email: { type: string }
+    #   => nil
+    #
+    # @param operation_def [Hash] OpenAPIのoperation定義
+    # @return [String, nil]
+    def extract_wrapper_key(operation_def)
+      request_body = operation_def["requestBody"]
+      return nil unless request_body
+
+      schema = request_body.dig("content", "application/json", "schema") ||
+               request_body.dig("content", "multipart/form-data", "schema")
+      return nil unless schema.is_a?(Hash)
+
+      schema = resolve_ref(schema["$ref"]) || return if schema["$ref"]
+      properties = schema["properties"]
+      return nil unless properties.is_a?(Hash) && properties.size == 1
+
+      key, definition = properties.first
+      definition = resolve_ref(definition["$ref"]) || definition if definition.is_a?(Hash) && definition["$ref"]
+      definition.is_a?(Hash) && definition["type"] == "object" ? key : nil
     end
 
     # スキーマ定義からフィールドを再帰的に抽出する
