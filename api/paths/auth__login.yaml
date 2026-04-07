@@ -45,10 +45,13 @@ components:
       type: object
       required:
         - user
+        - tenant
         - token
       properties:
         user:
           $ref: "#/components/schemas/UserData"
+        tenant:
+          $ref: "#/components/schemas/TenantData"
         token:
           type: string
           description: "JWT アクセストークン"
@@ -67,6 +70,15 @@ components:
           type: string
           format: email
           example: "taro@example.com"
+
+    TenantData:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "田中家"
 
     ErrorResponse:
       type: object

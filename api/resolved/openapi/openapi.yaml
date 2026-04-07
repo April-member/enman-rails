@@ -208,15 +208,20 @@ components:
         user:
           name: 太郎
           email: taro@example.com
+        tenant:
+          name: 田中家
         token: eyJhbGciOiJIUzI1NiJ9...
       properties:
         user:
           $ref: "#/components/schemas/UserData_1"
+        tenant:
+          $ref: "#/components/schemas/TenantData"
         token:
           description: JWT アクセストークン
           example: eyJhbGciOiJIUzI1NiJ9...
           type: string
       required:
+      - tenant
       - token
       - user
       type: object

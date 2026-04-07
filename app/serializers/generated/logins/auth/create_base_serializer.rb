@@ -17,6 +17,11 @@ module Generated
             email: r.user.email
           }
         end
+        attribute :tenant do |r|
+          {
+            name: r.tenant.name
+          }
+        end
       end
     end
   end

@@ -6,8 +6,8 @@
 # ==============================================================================
 
 module Signups
-module Auth
-  class CreateSerializer < Generated::Signups::Auth::CreateBaseSerializer
+  module Auth
+    class CreateSerializer < Generated::Signups::Auth::CreateBaseSerializer
+    end
   end
-end
 end

@@ -14,7 +14,7 @@ module Generated
     # POST /auth/login (operationId: authLogin)
 
     def create
-      resource = Data.define(:user, :token).new(user: {"name" => "太郎", "email" => "taro@example.com"}, token: "eyJhbGciOiJIUzI1NiJ9...")
+      resource = Data.define(:user, :tenant, :token).new(user: {"name" => "太郎", "email" => "taro@example.com"}, tenant: {"name" => "田中家"}, token: "eyJhbGciOiJIUzI1NiJ9...")
       render json: ::Logins::CreateSerializer.new(resource).serialize, status: :ok
     end
 

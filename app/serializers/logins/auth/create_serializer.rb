@@ -6,8 +6,8 @@
 # ==============================================================================
 
 module Logins
-module Auth
-  class CreateSerializer < Generated::Logins::Auth::CreateBaseSerializer
+  module Auth
+    class CreateSerializer < Generated::Logins::Auth::CreateBaseSerializer
+    end
   end
-end
 end

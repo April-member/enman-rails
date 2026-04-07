@@ -15,9 +15,9 @@ class Auth::LoginController < Generated::Auth::LoginBaseController
 
   private
 
-  LoginResult = Data.define(:user, :token)
+  LoginResult = Data.define(:user, :tenant, :token)
 
   def build_result(user)
-    LoginResult.new(user:, token: user.generate_jwt)
+    LoginResult.new(user:, tenant: user.tenant, token: user.generate_jwt)
   end
 end
