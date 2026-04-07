@@ -1,20 +1,21 @@
-# Use PostgreSQL when running in Docker/Compose. Falls back to DATABASE_URL
+# Use PostgreSQL. Connection settings are stored in Rails credentials.
+# Run `bin/rails credentials:edit` to update.
 default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: <%= ENV.fetch("DB_HOST") { 'db' } %>
-  username: <%= ENV.fetch("DB_USERNAME") { 'enman' } %>
-  password: <%= ENV.fetch("DB_PASSWORD") { 'password' } %>
+  host: <%= Rails.application.credentials.dig(:db, :host) %>
+  username: <%= Rails.application.credentials.dig(:db, :username) %>
+  password: <%= Rails.application.credentials.dig(:db, :password) %>
 
 development:
   <<: *default
-  database: <%= ENV.fetch("DB_NAME") { 'enman_development' } %>
+  database: <%= Rails.application.credentials.dig(:db, :database_development) %>
 
 test:
   <<: *default
-  database: <%= ENV.fetch("DB_NAME") { 'enman_test' } %>
+  database: <%= Rails.application.credentials.dig(:db, :database_test) %>
 
 production:
   <<: *default
-  database: <%= ENV.fetch("DB_NAME") { 'enman_production' } %>
+  database: <%= Rails.application.credentials.dig(:db, :database_production) %>
