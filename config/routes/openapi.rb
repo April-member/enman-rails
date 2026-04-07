@@ -8,4 +8,5 @@
 resources :up, only: [ :index ]
 namespace :auth do
   resources :signup, only: [ :create ]
+  resources :login, only: [ :create ]
 end

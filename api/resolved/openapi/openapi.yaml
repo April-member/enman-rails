@@ -49,6 +49,31 @@ paths:
       summary: 新規テナント作成 + 管理者ユーザー登録
       tags:
       - auth
+  /auth/login:
+    post:
+      operationId: authLogin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthLoginRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthLoginResponse"
+          description: ログイン成功
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error Response
+      summary: ログイン
+      tags:
+      - auth
 components:
   schemas:
     HealthOkResponse:
@@ -72,13 +97,19 @@ components:
         tenant:
           name: 田中家
           id: 1
+        token: eyJhbGciOiJIUzI1NiJ9...
       properties:
         user:
           $ref: "#/components/schemas/UserData"
         tenant:
           $ref: "#/components/schemas/TenantData"
+        token:
+          description: JWT アクセストークン
+          example: eyJhbGciOiJIUzI1NiJ9...
+          type: string
       required:
       - tenant
+      - token
       - user
       type: object
     UserData:
@@ -178,4 +209,55 @@ components:
       - password_confirmation
       - tenant_name
       - user_name
+      type: object
+    AuthLoginResponse:
+      example:
+        user:
+          name: 太郎
+          id: 1
+          email: taro@example.com
+        token: eyJhbGciOiJIUzI1NiJ9...
+      properties:
+        user:
+          $ref: "#/components/schemas/UserData"
+        token:
+          description: JWT アクセストークン
+          example: eyJhbGciOiJIUzI1NiJ9...
+          type: string
+      required:
+      - token
+      - user
+      type: object
+    ErrorResponse_1:
+      properties:
+        errors:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          example:
+            base:
+            - メールアドレスまたはパスワードが正しくありません
+          type: object
+      required:
+      - errors
+      type: object
+    AuthLoginRequest:
+      example:
+        password: Password123
+        email: taro@example.com
+      properties:
+        email:
+          description: ログインメールアドレス
+          example: taro@example.com
+          format: email
+          type: string
+        password:
+          description: ログインパスワード
+          example: Password123
+          minLength: 8
+          type: string
+      required:
+      - email
+      - password
       type: object

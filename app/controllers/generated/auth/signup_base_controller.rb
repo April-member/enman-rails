@@ -14,7 +14,7 @@ module Generated
     # POST /auth/signup (operationId: authSignup)
 
     def create
-      resource = Data.define(:user, :tenant).new(user: {"name" => "太郎", "id" => 1, "email" => "taro@example.com"}, tenant: {"name" => "田中家", "id" => 1})
+      resource = Data.define(:user, :tenant, :token).new(user: {"name" => "太郎", "id" => 1, "email" => "taro@example.com"}, tenant: {"name" => "田中家", "id" => 1}, token: "eyJhbGciOiJIUzI1NiJ9...")
       render json: ::Signups::CreateSerializer.new(resource).serialize, status: :created
     end
 

@@ -18,6 +18,6 @@ class Auth::SignupController < Generated::Auth::SignupBaseController
   SignupResult = Data.define(:tenant, :user, :token)
 
   def build_result(tenant, user)
-    SignupResult.new(tenant:, user:, token: "TODO")
+    SignupResult.new(tenant:, user:, token: user.generate_jwt)
   end
 end

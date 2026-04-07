@@ -15,6 +15,10 @@ module Auth
     attribute :tenant do |result|
       { id: result.tenant.id, name: result.tenant.name }
     end
+
+    attribute :token do |result|
+      result.token
+    end
   end
 end
 end

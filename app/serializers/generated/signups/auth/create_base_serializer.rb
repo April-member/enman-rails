@@ -11,7 +11,7 @@ module Generated
       class CreateBaseSerializer
         include Alba::Resource
 
-        attributes :user, :tenant
+        attributes :user, :tenant, :token
       end
     end
   end

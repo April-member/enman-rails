@@ -66,11 +66,16 @@ components:
       required:
         - user
         - tenant
+        - token
       properties:
         user:
           $ref: "#/components/schemas/UserData"
         tenant:
           $ref: "#/components/schemas/TenantData"
+        token:
+          type: string
+          description: "JWT アクセストークン"
+          example: "eyJhbGciOiJIUzI1NiJ9..."
 
     UserData:
       type: object
