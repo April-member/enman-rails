@@ -9,7 +9,6 @@ module Generated
   module Ups
     class IndexBaseSerializer
       include Alba::Resource
-
       attributes :message, :test
     end
   end

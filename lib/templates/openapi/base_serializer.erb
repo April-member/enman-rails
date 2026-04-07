@@ -11,9 +11,23 @@ module Generated
 <%- end -%>
 <%= "  " * (modules.size + 1) %>class <%= base_class_name.split("::").last %>
 <%= "  " * (modules.size + 2) %>include Alba::Resource
-<%- if attributes.any? -%>
-
-<%= "  " * (modules.size + 2) %>attributes <%= attributes.map { |attr| ":#{attr}" }.join(", ") %>
+<%- indent = "  " * (modules.size + 2) -%>
+<%- scalar_attrs = attributes.select { |a| a.is_a?(String) } -%>
+<%- nested_attrs = attributes.select { |a| a.is_a?(Hash) } -%>
+<%- if scalar_attrs.any? -%>
+<%= indent %>attributes <%= scalar_attrs.map { |a| ":#{a}" }.join(", ") %>
+<%- end -%>
+<%- nested_attrs.each do |attr| -%>
+<%- attr.each do |key, nested_fields| -%>
+<%= indent %>attribute :<%= key %> do |r|
+<%= indent %>  {
+<%- nested_fields.each_with_index do |nested, idx| -%>
+<%- comma = idx < nested_fields.size - 1 ? "," : "" -%>
+<%= indent %>    <%= nested %>: r.<%= key %>.<%= nested %><%= comma %>
+<%- end -%>
+<%= indent %>  }
+<%= indent %>end
+<%- end -%>
 <%- end -%>
 <%= "  " * (modules.size + 1) %>end
 <%- modules.each_with_index do |_, i| -%>

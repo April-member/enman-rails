@@ -96,7 +96,6 @@ components:
           email: taro@example.com
         tenant:
           name: 田中家
-          id: 1
         token: eyJhbGciOiJIUzI1NiJ9...
       properties:
         user:
@@ -137,17 +136,11 @@ components:
     TenantData:
       example:
         name: 田中家
-        id: 1
       properties:
-        id:
-          example: 1
-          readOnly: true
-          type: integer
         name:
           example: 田中家
           type: string
       required:
-      - id
       - name
       type: object
     ErrorResponse:
@@ -214,12 +207,11 @@ components:
       example:
         user:
           name: 太郎
-          id: 1
           email: taro@example.com
         token: eyJhbGciOiJIUzI1NiJ9...
       properties:
         user:
-          $ref: "#/components/schemas/UserData"
+          $ref: "#/components/schemas/UserData_1"
         token:
           description: JWT アクセストークン
           example: eyJhbGciOiJIUzI1NiJ9...
@@ -227,6 +219,22 @@ components:
       required:
       - token
       - user
+      type: object
+    UserData_1:
+      example:
+        name: 太郎
+        email: taro@example.com
+      properties:
+        name:
+          example: 太郎
+          type: string
+        email:
+          example: taro@example.com
+          format: email
+          type: string
+      required:
+      - email
+      - name
       type: object
     ErrorResponse_1:
       properties:

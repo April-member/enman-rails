@@ -99,13 +99,8 @@ components:
     TenantData:
       type: object
       required:
-        - id
         - name
       properties:
-        id:
-          type: integer
-          readOnly: true
-          example: 1
         name:
           type: string
           example: "田中家"

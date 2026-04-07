@@ -10,8 +10,13 @@ module Generated
     module Auth
       class CreateBaseSerializer
         include Alba::Resource
-
-        attributes :user, :token
+        attributes :token
+        attribute :user do |r|
+          {
+            name: r.user.name,
+            email: r.user.email
+          }
+        end
       end
     end
   end

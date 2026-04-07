@@ -57,14 +57,9 @@ components:
     UserData:
       type: object
       required:
-        - id
         - name
         - email
       properties:
-        id:
-          type: integer
-          readOnly: true
-          example: 1
         name:
           type: string
           example: "太郎"
