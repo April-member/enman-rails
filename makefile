@@ -20,3 +20,9 @@ db-migrate:
 	docker compose run --rm app bin/rails db:migrate
 
 db-setup: db-create db-migrate
+
+credentials:
+	EDITOR="cat" bin/rails credentials:show
+
+credentials-edit:
+	bin/rails credentials:edit
