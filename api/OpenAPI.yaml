@@ -15,3 +15,5 @@ paths:
     $ref: ./paths/up.yaml
   /auth/signup:
     $ref: ./paths/auth__signup.yaml
+  /auth/login:
+    $ref: ./paths/auth__login.yaml
